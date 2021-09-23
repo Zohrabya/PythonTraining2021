@@ -4,29 +4,26 @@ num2 = int(input("Enter the second number: "))
 num3 = int(input("Enter the third number: "))
 num4 = int(input("Enter the fourth number: "))
 num5 = int(input("Enter the fifth number: "))
+min = num1
+max = num1
+#smallest
+if num2 < num1:
+    min = num2
+if num3 < num1:
+    min = num3
+if num4 < num1:
+    min = num4
+if num5 < num1:
+    min = num5
+print("Tha smallest number is {}:".format(min))
 
 #largest
-if num3 < num1 > num2 and num4 < num1 > num5:
-    largest = num1
-elif num1 < num2 > num3 and num4 < num2 > num5:
-    largest = num2
-elif num1 < num3 > num2 and num4 < num3 > num5:
-    largest = num3
-elif num1 < num4 > num2 and num3 < num4 > num5:
-    largest = num4
-elif num1 < num5 > num2 and num3 < num5 > num4:
-    largest = num5
-print("Tha largest number is {}:".format(largest))
-
-#smallest
-if num2 > num1 < num3 and num4 > num1 < num5:
-    smallest = num1
-elif num1 > num2 < num3 and num4 > num2 < num5:
-    smallest = num2
-elif num1 > num3 < num2 and num4 > num3 < num5:
-    smallest = num3
-elif num1 > num4 < num2 and num3 > num4 < num5:
-    smallest = num4
-elif num1 > num5 < num2 and num3 > num5 < num4:
-    smallest = num5
-print("The smallest number is {}:".format(smallest))
+if num2 > num1:
+    max = num2
+if num3 > num1:
+    max = num3
+if num4 > num1:
+    max = num4
+if num5 > num1:
+    max = num5
+print("The largest number is {}:".format(max) )
