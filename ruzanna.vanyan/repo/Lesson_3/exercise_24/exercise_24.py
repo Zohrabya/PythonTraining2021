@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 print("Ineteger Sqaure Cube")
 print(0,"\t", 0 **2,"\t", 0 ** 3)
 print(1,"\t", 1 **2,"\t", 1 ** 3)
