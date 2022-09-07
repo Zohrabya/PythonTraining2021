@@ -1,0 +1,1264 @@
+{
+	"info": {
+		"_postman_id": "e80d10a3-f0df-47fe-be8e-bacde29825bc",
+		"name": "users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "053acb05-5e3e-473a-9000-319d8896bfad",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"     if (pm.expect(pm.response.text()).not.include(\"errors\")) {",
+							"        let users_uuid = jsonData['data']['insertUser']['id'];",
+							"        pm.globals.set(\"users_uuid\", users_uuid);",
+							"        //console.log(\"Created user account at : \",users_uuid)",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "cc6ad964-abc7-47ea-8e45-3ee0102655df",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "ZB3R136ifw7y11yBUX3wZax5l1cjcWrrQciulNwRAWZG5iHtMwLjvGiDK0XSOw5d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation InsertUser ($id : uuid){\n  insertUser(object: {locale: \"en\", displayName: \"Temporary Test user\", phoneNumber: \"+150055500077\", defaultRole: \"user\", demoAccount: true, id: $id}) {\n    id\n  }\n}\n",
+						"variables": "{\n    \"id\" : \"{{$guid}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAccount",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a90436fc-e42e-442a-9e32-17d05adc1ce8",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"     if (pm.expect(pm.response.text()).not.include(\"errors\")) {",
+							"        let account_id = jsonData['data']['accounts'][0]['id'];",
+							"        pm.globals.set(\"account_id\", account_id);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "6c908d00-2243-4528-aff0-c68cd1c1b354",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "ZB3R136ifw7y11yBUX3wZax5l1cjcWrrQciulNwRAWZG5iHtMwLjvGiDK0XSOw5d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query getAccount($userID : uuid){\n  accounts(where: {userId: {_eq: $userID}}) {\n    id\n  }\n}\n",
+						"variables": "{\n    \"userID\" : \"{{users_uuid}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setExternalId",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "54c26438-292e-45fe-bee6-b1c779692286",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"     if (pm.expect(pm.response.text()).not.include(\"errors\")) {",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "a0d6bfcf-32ff-465f-ba59-111dcb3da04b",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "ZB3R136ifw7y11yBUX3wZax5l1cjcWrrQciulNwRAWZG5iHtMwLjvGiDK0XSOw5d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation UpdateAccount($accountID : uuid!){\n  updateAccount(_set: {externalId: \"161e063c-f267-4699-ab33-bc6c2f9b8e2f\"}, pk_columns: {id: $accountID}) {\n    id\n  }\n}\n",
+						"variables": "{\n    \"accountID\" : \"{{account_id}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19fee777-43aa-4873-a593-831c540cfdd3",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"     if (pm.expect(pm.response.text()).not.include(\"errors\")) {",
+							"        let access_token = jsonData['session']['accessToken'];",
+							"        pm.environment.set(\"token\", access_token);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "7f9e626d-08bb-4345-bd99-36dcd424dccb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"phoneNumber\": \"+15005550007\",\n  \"otp\": \"111111\"\n}"
+				},
+				"url": {
+					"raw": "https://auth.zorion.finance/signin/passwordless/sms/otp",
+					"protocol": "https",
+					"host": [
+						"auth",
+						"zorion",
+						"finance"
+					],
+					"path": [
+						"signin",
+						"passwordless",
+						"sms",
+						"otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accountActivity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0113e776-950e-4ab4-a673-86f4553787a5",
+						"exec": [
+							"pm.test(\"Account Activity Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "1b089ac1-74d7-4b9e-8fb9-7c17f87b956e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AccountActivities($userID : uuid!) {\n  accountActivities(id: $userID) {\n    activityType\n    cumQty\n    date\n    description\n    id\n    leavesQty\n    netAmount\n    orderId\n    orderStatus\n    perShareAmount\n    price\n    qty\n    side\n    status\n    symbol\n    transactionTime\n    type\n  }\n}\n",
+						"variables": "{\n    \"userID\" : \"{{account_id}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accountPortfolioHistory",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af299934-0ef2-41f0-9ef7-36fef35de443",
+						"exec": [
+							"pm.test(\"Account Portfolio History Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "215f29f5-8b85-4f7f-bc50-661019b49dcf",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AccountPortfolioHistory($userID : uuid!)  {\n  accountPortfolioHistory(id: $userID) {\n    baseValue\n    equity\n    profitLoss\n    profitLossPct\n    timeframe\n    timestamp\n  }\n}\n",
+						"variables": "{\n    \"userID\" : \"{{account_id}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accountProfile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c8c36d89-827d-4cfd-a077-8788d83e6420",
+						"exec": [
+							"pm.test(\"Account Profile Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "0ad5f927-77e0-4b3f-942e-4b49e92b532a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AccountProfile($userID : uuid!) {\n  accountProfile(id: $userID) {\n    cash\n    cashTransferable\n    cashWithdrawable\n    equity\n    lastCash\n    lastDaytradeCount\n    lastDaytradingBuyingPower\n    lastEquity\n    status\n    tradingBlocked\n    transfersBlocked\n  }\n}\n",
+						"variables": "{\n    \"userID\" : \"{{account_id}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "insertOrder",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "745c9217-370f-4e5a-859b-569702a1a71a",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "65f75465-42a6-41f1-bcec-a18cc32bcd0c",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"     if (pm.expect(pm.response.text()).not.include(\"errors\")) {",
+							"        let order_uuid = jsonData['data']['insertOrder']['id'];",
+							"        pm.globals.set(\"order_uuid\", order_uuid);",
+							"    }",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "6aeb5967-6e81-4e00-b845-2252cde65bc6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "ZB3R136ifw7y11yBUX3wZax5l1cjcWrrQciulNwRAWZG5iHtMwLjvGiDK0XSOw5d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation InsertOrder($accountId: uuid = \"\", $amount: numeric = \"\", $assetId: uuid = \"\", $providerId: uuid = \"\", $userId: uuid = \"\") {\n  insertOrder(object: {accountId: $accountId, amount: $amount, assetId: $assetId, orderClass: \"simple\", orderType: \"market\", providerId: $providerId, side: \"buy\", userId: $userId, timeInForce: \"day\"}) {\n    id\n    createdAt\n  }\n}\n\n",
+						"variables": "{\n  \"accountId\": \"{{account_id}}\",\n  \"amount\": 0.1,\n  \"assetId\": \"1d0c2875-510c-4d20-be17-052deddb6fe7\",\n  \"providerId\": \"3ded05cc-4d10-430f-b312-948f22a847da\",\n  \"userId\": \"{{users_uuid}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cancelOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "013b466e-d60c-4aa0-9990-624939290b2a",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"    //console.log(pm.globals.get(\"order_uuid\"))",
+							"    let order_status = jsonData['data']['cancelOrder'];",
+							"   // console.log(order_status)",
+							"    pm.test(\"Account Profile Response\", function () {",
+							"        if (pm.expect(pm.response.text()).not.include(\"errors\")) {",
+							"            let order_status = jsonData['data']['cancelOrder'];",
+							"        }",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "a4638e71-2758-4ae4-b1b9-c35183b85a44",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "ZB3R136ifw7y11yBUX3wZax5l1cjcWrrQciulNwRAWZG5iHtMwLjvGiDK0XSOw5d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation CancelOrder($id:uuid!){\n    cancelOrder(id: $id)\n}",
+						"variables": "{\n    \"id\" : \"{{order_uuid}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetCandles",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d47181db-f182-4cdf-8e86-cb19fd5ae24c",
+						"exec": [
+							"pm.test(\"Asset Candles Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "5202d400-d2f6-4d3c-aeb0-4c9f3df331e1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetCandles {\n  assetCandles(fromTime: 1661176332, id: \"5ebce1ee-a49e-4e98-878b-a773ca8163f5\", resolution: \"D\", toTime: 1661176332) {\n    o\n    s\n    t\n    v\n    c\n    h\n    l\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetEsgScore",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "12237b72-0cdd-4561-9f42-8ea04fef89eb",
+						"exec": [
+							"pm.test(\"Asset Esg Score Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "b343dfcc-9932-4846-a883-5f06964ac318",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetEsgScore {\n  assetEsgScore(id: \"5ebce1ee-a49e-4e98-878b-a773ca8163f5\") {\n    data\n    environmentScore\n    governanceScore\n    socialScore\n    symbol\n    totalESGScore\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetLatestTrade",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "185238cd-2b01-4311-a06c-a8b1227c074d",
+						"exec": [
+							"pm.test(\"Asset Latest Trade Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "b86615d7-5378-4561-a29e-f2858b2addfe",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetLatestTrade {\n  assetLatestTrade(id: \"5ebce1ee-a49e-4e98-878b-a773ca8163f5\") {\n    price\n    symbol\n    timestamp\n    tradeSize\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetMultiSnapshots",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a87bf28d-4e8a-4b6d-a28c-b65b257f3e3c",
+						"exec": [
+							"pm.test(\"Asset Multi Snapshots Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "31df2c19-9bdb-4f24-aa06-5fd6456abb0c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetMultiSnapshots {\n  assetMultiSnapshots(provider_id: \"3ded05cc-4d10-430f-b312-948f22a847da\", assetsIds: \"bb227ece-ed45-4d50-949a-75f7d5719cad\") {\n    symbol\n    data {\n      dailyBar\n      minuteBar\n      latestQuote\n      latestTrade\n      prevDailyBar\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetProfile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2276a001-a9bb-4706-9190-b157bb235a55",
+						"exec": [
+							"pm.test(\"Asset Profile Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "29029e07-b4f0-41bf-9ac5-fa25ec7ce6f0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetProfile {\n  assetProfile(id: \"5ebce1ee-a49e-4e98-878b-a773ca8163f5\") {\n    address\n    city\n    country\n    currency\n    cusip\n    description\n    employeeTotal\n    exchange\n    finnhubIndustry\n    floatingShare\n    ggroup\n    gind\n    gsector\n    gsubind\n    ipo\n    isin\n    logo\n    marketCapitalization\n    naics\n    naicsNationalIndustry\n    naicsSector\n    naicsSubsector\n    name\n    phone\n    sedol\n    shareOutstanding\n    state\n    ticker\n    usShare\n    weburl\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetRecommendationTrends",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0a0a7894-029f-480f-a325-938d86cbe069",
+						"exec": [
+							"pm.test(\"Asset Recommendation Trends Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "4106e80d-2fb3-41b5-a2ec-d3e8f3c2aec6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetRecommendationTrends {\n  assetRecommendationTrends(id: \"535683cd-50e1-4dca-9951-5a0a838dae6d\") {\n    buy\n    hold\n    period\n    sell\n    strongBuy\n    strongSell\n    symbol\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetShariaCompliance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1f78e352-108b-499f-b562-aee2f7aa6425",
+						"exec": [
+							"pm.test(\"Asset Sharia Compliance Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "c70e5885-8d3b-4f4b-8ff4-c5326a76d6f8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetShariaCompliance {\n  assetShariaCompliance(id: \"b58d0b1f-2e0e-413d-8ee1-6db299c9db3f\") {\n    data\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assetTheme",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9d25a3e6-311b-404e-8714-955bf026284f",
+						"exec": [
+							"pm.test(\"Asset Theme Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "6107937b-1062-4e53-a559-65a36e77df2a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query AssetTheme {\n  assetTheme(providerId: \"3ded05cc-4d10-430f-b312-948f22a847da\", theme: \"cloud\") {\n    id\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "companyNews",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "04ad0115-e122-46ec-9229-d8882eb3bc82",
+						"exec": [
+							"pm.test(\"Company News Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "6579364e-638f-49dc-8f22-6b3c07749bbb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query CompanyNews {\n  companyNews(fromTime: \"1661414903\", id: \"1d0c2875-510c-4d20-be17-052deddb6fe7\", toTime: \"1661414911\") {\n    id\n    category\n    datetime\n    headline\n    image\n    related\n    source\n    summary\n    url\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getExchangeRate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "11d9af96-f30e-4b6a-89d6-bb7047f05e04",
+						"exec": [
+							"pm.test(\"Get Exchange Rate Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "b18566c9-f716-4082-aa19-32d055c7a912",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query GetExchangeRate($accountID:uuid!) {\n  getExchangeRate(accountId: $accountID, amount: 1000, fromCurrency: \"USD\", toCurrency: \"GBP\") {\n    rate\n  }\n}\n",
+						"variables": "{\n   \"accountID\" : \"{{account_id}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "marketCalendar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab9d792f-0382-4378-85ee-c99aff2234fa",
+						"exec": [
+							"pm.test(\"Market Calendar Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "13ca938f-a84d-47b7-bd76-09dbf7b199f3",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query MarketCalendar {\n  marketCalendar(end: \"2020-06-01\", providerId: \"3ded05cc-4d10-430f-b312-948f22a847da\", start: \"2020-04-10\") {\n    close\n    date\n    open\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "marketNews",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "470fab02-74fd-4e13-a4d2-cbbcb03ca560",
+						"exec": [
+							"pm.test(\"Market News Response\", function () {",
+							"    let status = pm.response.code",
+							"    if (status == 200) {",
+							"        pm.expect(pm.response.text()).not.include(\"errors\")",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "9aed5c7c-ac4f-4fb1-bd36-34abc4b3605f",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query MarketNews {\n  marketNews(minId: 10, category: \"general\") {\n    category\n    datetime\n    id\n    image\n    headline\n    url\n    summary\n    source\n    related\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4e66bc2b-00a2-40a1-b943-28602e7d52cd",
+						"exec": [
+							"let status = pm.response.code",
+							"if (status == 200) {",
+							"    jsonData = pm.response.json();",
+							"    console.log(\"No errors found\")",
+							"    let status = jsonData['data']['deleteUser'];",
+							"    console.log(status)",
+							"    pm.expect(pm.response.text()).not.include(\"null\")",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "43fc6a57-40dd-46e2-9b55-695b5507fd95",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-hasura-admin-secret",
+						"value": "ZB3R136ifw7y11yBUX3wZax5l1cjcWrrQciulNwRAWZG5iHtMwLjvGiDK0XSOw5d",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation DeleteUser($userID : uuid!){\n  deleteUser(id: $userID) {\n    id\n  }\n}",
+						"variables": "{\n    \"userID\" : \"{{users_uuid}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "{{HOST}}/v1/graphql",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"v1",
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "61c4c031-ef5c-4f4a-8b16-48e38febd11b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "23e2c1ff-c6cc-4be8-8832-44485b2877bf",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
